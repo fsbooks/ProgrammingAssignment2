@@ -1,13 +1,32 @@
-## Put comments here that give an overall description of what your
-## functions do
+# cachematrix.R
 
-## Write a short comment describing this function
+# This file provides caching capabilities for inverting matrices
+
+#   Two functions are provided:  
+#   The first function (makeCacheMatrix) has an invertible matrix as argument, and 
+#   returns a list with functions to
+#       (1) set the value of the matrix 
+#       (2) get the value of the matrix
+#       (3) set the value of the matrix inverse
+#       (4) get the value of the matrix inverse
+
+#   The second function (cacheSolve) takes the output list from makeCacheMatrix as an argument, 
+#       and returns the inverse.
+#     If the inverse has already been calculated, it retrieves the matrix from the
+#       cache, otherwise it solves and then sets it.
+
+# EXAMPLE:
+# > M <- matrix(rnorm(25),5,5)
+# > C <- cacheSolve(M)
+# > outinverseM <- cacheSolve(C)
+
+# ...if cacheSolve is run a second time, the solution is retrieved from the cache.
 
 makeCacheMatrix <- function(x = matrix()) {
-        m <- NULL
+        inverse <- NULL
         set <- function(y) {
                 x <<- y
-                m <<- NULL
+                inverse <<- NULL
         }
         get <- function() x
         setsolve <- function(solve) inverse <<- solve
@@ -23,13 +42,13 @@ makeCacheMatrix <- function(x = matrix()) {
 
 cacheSolve <- function(x, ...) {
         ## Return a matrix that is the inverse of 'x'
-        m <- x$getsolve()
+        inverse <- x$getsolve()
         if(!is.null(inverse)) {
                 message("getting cached data")
                 return(inverse)
         }
         data <- x$get()
-        m <- solve(data, ...)
+        inverse <- solve(data, ...)
         x$setsolve(inverse)
-        m
+        inverse
 }
